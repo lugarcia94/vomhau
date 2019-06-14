@@ -1,0 +1,51 @@
+.page-pedido{
+    .page-content {
+        padding: 5%;
+
+        .board{
+            text-align: center;
+            margin: 20px;
+
+            p{
+                font-size: 1.5rem;
+            }
+
+            form{
+                padding: 10px;
+                
+                h3{
+                    display: none;
+                }
+
+                #pedido{
+                    height: 31px;
+                    width: 155px;
+                    margin: 0 5px;
+                    display: inline-flex;
+                    vertical-align: top;
+
+                    @media screen and (max-width: 350px ) {
+
+                        width: 126px;
+                    }
+                }
+
+                input.image{
+                    background: url(../img/ok.png?4)center no-repeat #3d4445;
+                    height: 0;
+                    padding: 15.5px 65px;
+                    width: 0;
+                    bottom: 0;
+                    display: inline-flex;
+                    vertical-align: top;
+
+
+                    @media screen and (max-width: 428px ) {
+                        padding: 15px 31px;
+                    }
+                
+                }
+            }
+        }
+    }
+}

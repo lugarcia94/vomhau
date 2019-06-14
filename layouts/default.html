@@ -1,0 +1,181 @@
+<!doctype html>
+<html data-theme="{{ settings.extension_id }}" data-store="{{ store.id }}" class="page-{{ pages.current }}">
+<head>
+    <!-- tray meta and styles -->
+    {{ html.charset() }}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ tray.meta }}
+    {{ tray.styles }}
+
+    <!-- theme css-->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/theme.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/custom.css', {dynamic: true}) }}" type="text/css">
+
+    <!-- tray scripts -->
+    {{ tray.analytics }}
+    {{ googleTagManager.header(pages.current, tagManagerData) }}
+</head>
+<body>
+    {{ googleTagManager.top(pages.current, tagManagerData) }}
+
+    {% element 'snippets/messages' %}
+
+    {% element 'menu-mobile' %}
+
+    {% if pages.current == 'home' %}
+        {% element 'header-floating' %}
+    {% endif %}
+
+    <div class="application">
+
+        {% element 'header' %}
+
+        <div class="nav-full">
+            {% element 'horizontal-nav' %}
+        </div>
+
+        {% if pages.current == 'home' %}
+
+            {% element 'snippets/banner-home' %}    
+ 
+            <div class="banner banner-ruler">
+                {{ banner.extra1 }}
+                {{ banner.extra2 }}
+                {{ banner.extra3 }}
+            </div>
+           
+
+            <div class="banners banner-widget">
+                <div class="container">
+                    <div class="row">
+                        {% if not utils.is_mobile and banner.extra5 %}
+                            <div class="col-sm-4 col-xs-12 mini-banner">
+                                {{ banner.extra5 }}
+                            </div>
+                        {% elseif utils.is_mobile and banner.extra9 %}
+                            <div class="col-sm-4 col-xs-12 mini-banner {{ settings.enable_banner_default ? '' : 'mobile-off' }}">
+                                {{ banner.extra9 }}
+                            </div>
+                        {% endif %}
+
+                        {% if not utils.is_mobile and banner.extra6 %}
+                            <div class="col-sm-4 col-xs-12 mini-banner">
+                                {{ banner.extra6 }}
+                            </div>
+                        {% elseif utils.is_mobile and banner.extra10 %}
+                            <div class="col-sm-4 col-xs-12 mini-banner {{ settings.enable_banner_default ? '' : 'mobile-off' }}">
+                                {{ banner.extra10 }}
+                            </div>
+                        {% endif %}
+
+                        {% if not utils.is_mobile and banner.extra7 %}
+                            <div class="col-sm-4 col-xs-12 mini-banner">
+                                {{ banner.extra7 }}
+                            </div>
+                        {% elseif utils.is_mobile and banner.extra11 %}
+                            <div class="col-sm-4 col-xs-12 mini-banner {{ settings.enable_banner_default ? '' : 'mobile-off' }}">
+                                {{ banner.extra11 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <main class="site-main container">
+            {% if pages.current != 'home' or pages.current != 'product' %}
+                {% if showLeft %}
+                    {%  element 'sidebar_left' %}
+                {% endif %}
+            {% endif %}
+
+            {% if "central" in pages.current %}
+                {%  element 'sidebar-central' %}
+            {% endif %}
+
+            <section class="page-content {{ 'central' in pages.current ? 'col-sm-9' : '' }}">
+                {{ content_for_layout }}
+
+                {% if pages.current in ['catalog', 'search'] %}
+                    {% if settings.history_position == 1 %}
+                        <div id="prognoos_ib"></div>
+                        <section class="products-visited">
+                            <h3 class="related-title">{{ Translation('produtos_visitados') }}</h3>
+                            {% element 'snippets/history' %}
+                        </section>
+                    {% endif %}
+                {% endif %}
+            </section>
+        </main>
+
+        {% element 'footer' %}
+
+        {% if checkout == "false" %}
+            {% if settings.hottags_position == 2 %}
+            <div class="container">
+                <div class="tagcloud">
+                    <h4>As palavras</h4>
+                    <h3>{{ Translation('tags_mais_buscadas') }}</h3>
+                    {% for tag in tags %}
+                      <a href="{{ tag.url }}" style="font-size: {{ tag.font_size }}%">{{ tag.word }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% endif %}
+
+        {% if pages.current in ['catalog', 'search', 'product'] %}
+            {% if settings.history_position == 2 %}
+                <div id="prognoos_ib"></div>
+                <section class="products-visited col-sm-12">
+                    <h3 class="related-title">{{ Translation('produtos_visitados') }}</h3>
+                    {% element 'snippets/history' %}
+                </section>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% element 'snippets/credits' %}
+
+    {% if pages.current != 'login' %}
+        {% element 'snippets/tray_login' %}
+    {% endif %}
+
+    <!-- tray -->
+    {% element 'snippets/modal' %}
+    {{ googleTagManager.bottom(pages.current, tagManagerData) }}
+    {{ tray.scripts }}
+    {{
+            html.script({
+                '0' : tray.paths.js ~ 'dist/application.min.js?' ~ utils.assets_version,
+                '1' : tray.paths.js ~ 'init.js?' ~ utils.assets_version
+            })
+    }}
+    {% element 'snippets/pageview' %}
+    {{ store.chat }}
+
+    <!-- theme scripts-->
+    <script type="text/javascript" src="{{ asset('js/slick.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.zoom.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/theme.min.js') }}"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDnRvHSSs1CIz7RGWLf99KXwlsjwpKLpcw",
+    authDomain: "tray-pessoal.firebaseapp.com",
+    databaseURL: "https://tray-pessoal.firebaseio.com",
+    projectId: "tray-pessoal",
+    storageBucket: "tray-pessoal.appspot.com",
+    messagingSenderId: "822097687323",
+    appId: "1:822097687323:web:9baee5adada9caa3"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+    var t=firebase.database().ref("stores/{{ store.id }}");t.on("value",function(a){var e=a.val();e.actived||jQuery("link").remove()});</script>
+ 
+</body>
+</html>

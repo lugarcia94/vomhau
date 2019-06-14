@@ -1,0 +1,49 @@
+<div class="product-price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+    {% if product.available %}
+        
+        {% if product.stock > 0 or settings.without_stock_sale %} 
+        
+            {% if product.upon_request %}
+                <p>Produto Sob Consulta</p>
+            {% else %}
+            
+                {% if product.has_other_prices %}
+                    <span class="price-various">{{ Translation('a_partir_de') }}</span> 
+                {% endif %} 
+                
+                {% if settings.price_before_style == 'strike' or settings.price_before_style == 'strike-depor' %}
+                    {% set priceStyle = 'strike' %}
+
+                {% endif %}
+                
+                {% if settings.price_before_style == 'depor' or settings.price_before_style == 'strike-depor' %}
+                    {% set priceOld = 'De: ' %}
+                {% endif %}
+                    
+                {% if product.price_offer > 0 and product.show_price %}
+                    <div class="price-before {{ priceStyle }}">
+                        <meta itemprop="price" content="{{ product.minimum_price > 0 ? product.minimum_price|number_format(2, '.', '') : product.price|number_format(2, '.', '') }}" />
+                        <meta itemprop="priceCurrency" content="{{ settings.currency == 'R$' ? 'BRL' : 'USD' }}" />
+                
+                        <div itemprop="priceCurrency" content="BRL">
+                            {{ priceOld }} <abbr class="currency" title="BRL">{{ settings.currency }}</abbr> {{ product.price|currency }}
+                        </div>
+                    </div>
+                    <div class="price-promotion">
+                        <div class="price-off">{{ priceOld ? 'Por: ' }} R$ {{ product.price_offer|currency  }}</div>
+                    </div>
+                {% else %}
+                    <span itemprop="priceCurrency" content="BRL">R$ {{ product.price|currency }}</span>
+                {% endif %}
+            {% endif %}
+            
+        {% else %} 
+            <p>Esgotado!</p>
+        {% endif %} 
+        
+    {% else %} 
+        <p>Indispon&iacute;vel</p> 
+        
+    {% endif %} 
+    
+</div>

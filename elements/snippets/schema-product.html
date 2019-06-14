@@ -1,0 +1,60 @@
+<div class="tray-hide">
+
+	<a itemprop="url" href="{{ product.link }}">
+		<div itemprop="name">
+			<strong>{{ product.name }}</strong>
+		</div>
+	</a>
+	
+	{% if product.description_small %}
+		<div itemprop="description">{{ product.description_small }}</div>
+	{% endif %}
+	
+	{% if product.brand %}
+	<div itemprop="brand" itemscope itemtype="http://schema.org/Organization">
+		<span itemprop="name">{{ product.brand }}</span>
+	</div>
+	{% endif %} 
+	
+	{% if product.model %}
+	<div>
+		Model: <span itemprop="model">{{ product.model }}</span>
+	</div>
+	{% endif %}
+	
+	<div>
+		Product ID: <span itemprop="productID">{{ product.id }}</span>
+	</div>
+	
+	<div>
+		Product SKU: <span itemprop="sku">{{ product.id }}</span>
+	</div>
+	
+	{% if product.show_price %}
+	<div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<meta itemprop="price" content="{{ product.minimum_price > 0 ? product.minimum_price|number_format(2, '.', '') : product.price|number_format(2, '.', '') }}" />
+		<meta itemprop="priceCurrency" content="{{ settings.currency == 'R$' ? 'BRL' : 'USD' }}" />
+		<link itemprop="itemCondition" href="http://schema.org/NewCondition" /> New
+		{% if settings.without_stock_sale or product.stock %}
+			<link itemprop="availability" href="http://schema.org/InStock" />In stock
+		{% else %}
+			<link itemprop="availability" href="http://schema.org/OutOfStock" />Out of stock
+		{% endif %} 
+        <meta itemprop="url" content="{{ product.link }}"/>
+        <meta itemprop="priceValidUntil" content="{{ product.promotion_id ? product.end_promotion: "now"|date("d/m/Y") }}">
+        
+	</div>
+	{% endif %} 
+	
+	{% if product.ranking.count %}
+	<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+		<span itemprop="reviewCount">{{ product.ranking.count }}</span> 
+		<span itemprop="ratingValue">{{ product.ranking.rating }}</span>
+		<strong>{{ product.ranking.ratingText }}</strong>
+	</div>		
+	{% endif %}
+	
+	{% set image = product.images[0].large ?: tray.paths.system_image ~ "/new_imgoff.png" %}	
+	<img itemprop="image" src="{{ image }}" alt="{{ product.name|e }}">
+
+</div>
